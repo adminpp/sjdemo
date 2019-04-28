@@ -35,17 +35,20 @@ public class BuyerProductController {
         resultVO.setData(products);
         return resultVO;
     }
-    //展示食品，日用品
+
+    //（筛选器）展示食品，日用品
     //Integer page, Integer size, Integer typeId, String search, Integer type,
     // String prodtcuType, Integer priceRange , Integer order
     //productType食品分类  priceRange价格区间  type宠物类型
     @RequestMapping(value = "/shop")
-    public ResultVO productInfo(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "15") int size,
+    public ResultVO productInfo(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size,
                                  @RequestParam(defaultValue = "3") int typeId,
                                  @RequestParam(defaultValue = "") String search,
                                 @RequestParam(defaultValue = "3") int type,
                                  @RequestParam (defaultValue = "5")Integer productType,
-                                @RequestParam(defaultValue = "0") int priceRange,Integer order){
+                                @RequestParam(defaultValue = "0") int priceRange,
+                                @RequestParam(defaultValue = "0")Integer order){
+        System.out.println();
         System.out.println(productType);
         System.out.println(priceRange);
         System.out.println(type);
@@ -57,18 +60,19 @@ public class BuyerProductController {
         resultVO.setData(products);
         return resultVO;
     }
-
+//（筛选器）日用品
     @RequestMapping("/daily")
-    public ResultVO productDaily(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "15") int size,
+    public ResultVO productDaily(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size,
                                 @RequestParam(defaultValue = "3") int typeId,
                                 @RequestParam(defaultValue = "") String search,
                                 @RequestParam(defaultValue = "4") int type,
                                 @RequestParam (defaultValue = "5")Integer productType,
-                                @RequestParam(defaultValue = "0") int priceRange,Integer order){
+                                @RequestParam(defaultValue = "9") int priceRange,
+                                 @RequestParam(defaultValue = "0") Integer order){
         System.out.println(productType);
         System.out.println(priceRange);
         System.out.println(typeId);
-        //分页展示商品
+        //分页展示日用品
         ResultData products = productInfoService.findDailyByPage(page,size,typeId,search,type,productType,priceRange,order);
         ResultVO resultVO = new ResultVO();
         resultVO.setCode(1);
@@ -77,7 +81,25 @@ public class BuyerProductController {
         return resultVO;
     }
 
-
+    //（筛选器）宠物
+    @RequestMapping("/animal")
+    public ResultVO productanimal(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "6") int size,
+                                 @RequestParam(defaultValue = "3") int typeId,
+                                 @RequestParam(defaultValue = "") String search,
+                                 @RequestParam(defaultValue = "4") int type,
+                                 @RequestParam (defaultValue = "5")Integer productType,
+                                 @RequestParam(defaultValue = "0") int priceRange,Integer order){
+        System.out.println(productType);
+        System.out.println(priceRange);
+        System.out.println(typeId);
+        //分页展示宠物
+        ResultData products = productInfoService.findDailyByPage(page,size,typeId,search,type,productType,priceRange,order);
+        ResultVO resultVO = new ResultVO();
+        resultVO.setCode(1);
+        resultVO.setMsg("成功");
+        resultVO.setData(products);
+        return resultVO;
+    }
 
 
     //首页食品图
@@ -136,7 +158,24 @@ public class BuyerProductController {
         resultVO.setData(products);
         return resultVO;
     }
-    //登录后首页筛选器
+    //登录后宠物展示
+    @GetMapping("/dlcw")
+    public ResultData findAnimal(){
+        ResultData dog = productInfoService.findDog();
+        return dog;
+    }
+    //登录后食品
+    @GetMapping("/dlfood")
+    public ResultData findfood(){
+        ResultData foods = productInfoService.findDlFood();
+        return foods;
+    }
+    //登录后日用品
+    @GetMapping("/dlry")
+    public ResultData findry(){
+        ResultData detail = productInfoService.findDetail();
+        return detail;
+    }
 
 
 

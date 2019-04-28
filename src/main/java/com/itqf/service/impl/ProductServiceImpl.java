@@ -10,10 +10,10 @@ import com.itqf.service.ProductInfoService;
 import com.itqf.utils.R;
 import com.itqf.utils.ResultData;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -52,6 +52,7 @@ public class ProductServiceImpl implements ProductInfoService {
         return resultData;
 
     }
+
     //分页查询所有食品
     //productType食品分类  priceRange价格区间  type宠物类型
     //typwId判断犬类 猫类
@@ -63,6 +64,12 @@ public class ProductServiceImpl implements ProductInfoService {
         ProductInfoExample.Criteria criteria = example.createCriteria();
         if (!search.equals("")) {
             criteria.andProductNameLike("%" + search + "%");
+        }
+        if(order.equals(3)){
+            example.setOrderByClause("product_price");
+        }
+        if(order.equals(4)){
+            example.setOrderByClause("create_time");
         }
         if (priceRange.equals(1)) {
             BigDecimal a = new BigDecimal("0");
@@ -143,6 +150,12 @@ public class ProductServiceImpl implements ProductInfoService {
             BigDecimal b = new BigDecimal("500");
             criteria.andProductPriceBetween(a, b);
         }
+        if(order.equals(3)){
+            example.setOrderByClause("product_price");
+        }
+        if(order.equals(4)){
+            example.setOrderByClause("create_time");
+        }
         criteria.andCategoryTypeEqualTo(type);
         StringBuffer stringBuffer = new StringBuffer();
         if (typeId == 2) {
@@ -173,11 +186,60 @@ public class ProductServiceImpl implements ProductInfoService {
         resultData.setTotal(info.getTotal());
         return resultData;
     };
-
-
-   public  ResultData findDogByPage(@RequestParam(defaultValue = "1") String page, @RequestParam(defaultValue = "6") String size, @RequestParam String productType, @RequestParam Integer age, @RequestParam(defaultValue = "1") Integer categoryType){
+    //商城查询宠物
+    @Override
+    public ResultData findAnimalByPage(Integer page, Integer size, Integer typeId, String search, int age, String animalSize) {
         return null;
+    }
+
+    //商城登录后首页
+    //（4张俩猫俩狗）
+   public  ResultData findDog(){
+       ProductInfoExample example = new ProductInfoExample();
+       ProductInfoExample.Criteria criteria = example.createCriteria();
+       ArrayList animals = new ArrayList();
+       animals.add(505);
+       animals.add(506);
+       animals.add(507);
+       animals.add(508);
+       criteria.andProductIdIn(animals);
+       List<ProductInfo> productInfos = productInfoMapper.selectByExample(example);
+       ResultData resultData = new ResultData();
+       resultData.setRows(productInfos);
+       return resultData;
+   };
+    //登录后首页食品5张
+    public  ResultData findDlFood(){
+        ProductInfoExample example = new ProductInfoExample();
+        ProductInfoExample.Criteria criteria = example.createCriteria();
+        ArrayList foods = new ArrayList();
+        foods.add(509);
+        foods.add(510);
+        foods.add(511);
+        foods.add(512);
+        foods.add(513);
+        criteria.andProductIdIn(foods);
+        List<ProductInfo> productInfos = productInfoMapper.selectByExample(example);
+        ResultData resultData = new ResultData();
+        resultData.setRows(productInfos);
+        return resultData;
     };
+    //登录后首页用品4张
+   public  ResultData findDetail(){
+       ProductInfoExample example = new ProductInfoExample();
+       ProductInfoExample.Criteria criteria = example.createCriteria();
+       ArrayList deatils = new ArrayList();
+       deatils.add(514);
+       deatils.add(515);
+       deatils.add(516);
+       deatils.add(517);
+       criteria.andProductIdIn(deatils);
+       List<ProductInfo> productInfos = productInfoMapper.selectByExample(example);
+       ResultData resultData = new ResultData();
+       resultData.setRows(productInfos);
+       return resultData;
+   };
+
     @Override
     public R saveProductInfo(ProductInfo productInfo) {
         int i = productInfoMapper.insertSelective(productInfo);
